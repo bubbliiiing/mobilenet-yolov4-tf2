@@ -379,23 +379,21 @@ if __name__ == "__main__":
 
         if Use_Data_Loader:
             gen = partial(data_generator, annotation_lines = lines[:num_train], batch_size = batch_size, input_shape = input_shape, 
-                            anchors = anchors, num_classes = num_classes, mosaic=mosaic)
+                            anchors = anchors, num_classes = num_classes, mosaic = mosaic, random=True),
             gen = tf.data.Dataset.from_generator(gen, (tf.float32, tf.float32, tf.float32, tf.float32))
                 
             gen_val = partial(data_generator, annotation_lines = lines[num_train:], batch_size = batch_size, 
-                            input_shape = input_shape, anchors = anchors, num_classes = num_classes, mosaic=False)
+                            input_shape = input_shape, anchors = anchors, num_classes = num_classes, mosaic=False, random=False),
             gen_val = tf.data.Dataset.from_generator(gen_val, (tf.float32, tf.float32, tf.float32, tf.float32))
 
             gen = gen.shuffle(buffer_size=batch_size).prefetch(buffer_size=batch_size)
             gen_val = gen_val.shuffle(buffer_size=batch_size).prefetch(buffer_size=batch_size)
-
         else:
-            gen = data_generator(lines[:num_train], batch_size, input_shape, anchors, num_classes, mosaic=mosaic)
-            gen_val = data_generator(lines[num_train:], batch_size, input_shape, anchors, num_classes, mosaic=False)
+            gen = data_generator(lines[:num_train], batch_size, input_shape, anchors, num_classes, mosaic=mosaic, random=True),
+            gen_val = data_generator(lines[num_train:], batch_size, input_shape, anchors, num_classes, mosaic=False, random=False)
             
         epoch_size = num_train//batch_size
         epoch_size_val = num_val//batch_size
-
         if Cosine_scheduler:
             lr_schedule = tf.keras.experimental.CosineDecayRestarts(
                 initial_learning_rate = learning_rate_base, 
@@ -406,7 +404,7 @@ if __name__ == "__main__":
         else:
             lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
                 initial_learning_rate=learning_rate_base,
-                decay_steps=epoch_size,
+                decay_steps = epoch_size,
                 decay_rate=0.95,
                 staircase=True
             )
@@ -427,7 +425,7 @@ if __name__ == "__main__":
 
         if Use_Data_Loader:
             gen = partial(data_generator, annotation_lines = lines[:num_train], batch_size = batch_size, input_shape = input_shape, 
-                            anchors = anchors, num_classes = num_classes, mosaic=mosaic, random=True),
+                            anchors = anchors, num_classes = num_classes, mosaic = mosaic, random=True),
             gen = tf.data.Dataset.from_generator(gen, (tf.float32, tf.float32, tf.float32, tf.float32))
                 
             gen_val = partial(data_generator, annotation_lines = lines[num_train:], batch_size = batch_size, 

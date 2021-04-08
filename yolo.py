@@ -98,7 +98,6 @@ class YOLO(object):
         #---------------------------------------------------------#
         self.yolo_model = yolo_body(Input(shape=(None,None,3)), num_anchors//3, num_classes, self.backbone, self.alpha)
         self.yolo_model.load_weights(self.model_path)
-        self.yolo_model.save_weights(self.model_path)
 
         print('{} model, anchors, and classes loaded.'.format(model_path))
 
