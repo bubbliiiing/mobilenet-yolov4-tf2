@@ -1,18 +1,11 @@
 #-------------------------------------------------------------#
 #   MobileNetV2的网络部分
 #-------------------------------------------------------------#
-import math
-
-import numpy as np
-import tensorflow as tf
 from tensorflow.keras import backend
 from tensorflow.keras.layers import (Activation, Add, BatchNormalization,
-                                     Conv2D, Dense, DepthwiseConv2D, Dropout,
-                                     GlobalAveragePooling2D,
-                                     GlobalMaxPooling2D, Input, MaxPooling2D,
+                                     Conv2D, DepthwiseConv2D,
                                      ZeroPadding2D)
-from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing import image
+from tensorflow.keras.initializers import RandomNormal
 
 
 # relu6！
@@ -46,7 +39,6 @@ def _make_divisible(v, divisor, min_value=None):
         new_v += divisor
     return new_v
 
-
 def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
     in_channels = backend.int_shape(inputs)[-1]
     pointwise_conv_filters = int(filters * alpha)
@@ -58,14 +50,15 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
     if block_id:
         # Expand
         x = Conv2D(expansion * in_channels,
-                          kernel_size=1,
-                          padding='same',
-                          use_bias=False,
-                          activation=None,
-                          name=prefix + 'expand')(x)
+                    kernel_initializer=RandomNormal(stddev=0.02),
+                    kernel_size=1,
+                    padding='same',
+                    use_bias=False,
+                    activation=None,
+                    name=prefix + 'expand')(x)
         x = BatchNormalization(epsilon=1e-3,
-                                      momentum=0.999,
-                                      name=prefix + 'expand_BN')(x)
+                                momentum=0.999,
+                                name=prefix + 'expand_BN')(x)
         x = Activation(relu6, name=prefix + 'expand_relu')(x)
     else:
         prefix = 'expanded_conv_'
@@ -76,24 +69,26 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
     
     # part2 可分离卷积
     x = DepthwiseConv2D(kernel_size=3,
-                               strides=stride,
-                               activation=None,
-                               use_bias=False,
-                               padding='same' if stride == 1 else 'valid',
-                               name=prefix + 'depthwise')(x)
+                        depthwise_initializer=RandomNormal(stddev=0.02),
+                        strides=stride,
+                        activation=None,
+                        use_bias=False,
+                        padding='same' if stride == 1 else 'valid',
+                        name=prefix + 'depthwise')(x)
     x = BatchNormalization(epsilon=1e-3,
-                                  momentum=0.999,
-                                  name=prefix + 'depthwise_BN')(x)
+                            momentum=0.999,
+                            name=prefix + 'depthwise_BN')(x)
 
     x = Activation(relu6, name=prefix + 'depthwise_relu')(x)
 
     # part3压缩特征，而且不使用relu函数，保证特征不被破坏
     x = Conv2D(pointwise_filters,
-                      kernel_size=1,
-                      padding='same',
-                      use_bias=False,
-                      activation=None,
-                      name=prefix + 'project')(x)
+                kernel_initializer=RandomNormal(stddev=0.02),
+                kernel_size=1,
+                padding='same',
+                use_bias=False,
+                activation=None,
+                name=prefix + 'project')(x)
 
     x = BatchNormalization(epsilon=1e-3, momentum=0.999, name=prefix + 'project_BN')(x)
 
@@ -110,14 +105,15 @@ def MobileNetV2(inputs, alpha=1.0):
                              name='Conv1_pad')(inputs)
     # 416,416,3 -> 208,208,32
     x = Conv2D(first_block_filters,
-                      kernel_size=3,
-                      strides=(2, 2),
-                      padding='valid',
-                      use_bias=False,
-                      name='Conv1')(x)
+                kernel_initializer=RandomNormal(stddev=0.02),
+                kernel_size=3,
+                strides=(2, 2),
+                padding='valid',
+                use_bias=False,
+                name='Conv1')(x)
     x = BatchNormalization(epsilon=1e-3,
-                                  momentum=0.999,
-                                  name='bn_Conv1')(x)
+                            momentum=0.999,
+                            name='bn_Conv1')(x)
     x = Activation(relu6, name='Conv1_relu')(x)
 
     # 208,208,32 -> 208,208,16

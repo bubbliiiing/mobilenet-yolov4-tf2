@@ -1,9 +1,8 @@
 from tensorflow.keras import backend
 from tensorflow.keras.layers import (Activation, Add, BatchNormalization,
-                                     Conv2D, Dense, DepthwiseConv2D,
-                                     GlobalAveragePooling2D, Input, Multiply,
-                                     Reshape)
-from tensorflow.keras.models import Model
+                                     Conv2D, DepthwiseConv2D,
+                                     GlobalAveragePooling2D, Multiply, Reshape)
+from tensorflow.keras.initializers import RandomNormal
 
 
 def _activation(x, name='relu'):
@@ -40,20 +39,22 @@ def _bneck(inputs, expansion, alpha, out_ch, kernel_size, stride, se_ratio, acti
         # Expand
         prefix = 'expanded_conv_{}/'.format(block_id)
         x = Conv2D(exp_size,
-                          kernel_size=1,
-                          padding='same',
-                          use_bias=False,
-                          name=prefix + 'expand')(x)
+                    kernel_initializer=RandomNormal(stddev=0.02),
+                    kernel_size=1,
+                    padding='same',
+                    use_bias=False,
+                    name=prefix + 'expand')(x)
         x = BatchNormalization(axis=channel_axis,
                                       name=prefix + 'expand/BatchNorm')(x)
         x = _activation(x, activation)
 
     x = DepthwiseConv2D(kernel_size,
-                               strides=stride,
-                               padding='same',
-                               dilation_rate=1,
-                               use_bias=False,
-                               name=prefix + 'depthwise')(x)
+                        depthwise_initializer=RandomNormal(stddev=0.02),
+                        strides=stride,
+                        padding='same',
+                        dilation_rate=1,
+                        use_bias=False,
+                        name=prefix + 'depthwise')(x)
     x = BatchNormalization(axis=channel_axis,
                                   name=prefix + 'depthwise/BatchNorm')(x)
     x = _activation(x, activation)
@@ -63,23 +64,26 @@ def _bneck(inputs, expansion, alpha, out_ch, kernel_size, stride, se_ratio, acti
         y = GlobalAveragePooling2D(name=prefix + 'squeeze_excite/AvgPool')(x)
         y = Reshape([1, 1, exp_size], name=prefix + 'reshape')(y)
         y = Conv2D(reduced_ch,
-                          kernel_size=1,
-                          padding='same',
-                          use_bias=True,
-                          name=prefix + 'squeeze_excite/Conv')(y)
+                    kernel_initializer=RandomNormal(stddev=0.02),
+                    kernel_size=1,
+                    padding='same',
+                    use_bias=True,
+                    name=prefix + 'squeeze_excite/Conv')(y)
         y = Activation("relu", name=prefix + 'squeeze_excite/Relu')(y)
         y = Conv2D(exp_size,
-                          kernel_size=1,
-                          padding='same',
-                          use_bias=True,
-                          name=prefix + 'squeeze_excite/Conv_1')(y)
+                    kernel_initializer=RandomNormal(stddev=0.02),
+                    kernel_size=1,
+                    padding='same',
+                    use_bias=True,
+                    name=prefix + 'squeeze_excite/Conv_1')(y)
         x = Multiply(name=prefix + 'squeeze_excite/Mul')([Activation(hard_sigmoid)(y), x])
 
     x = Conv2D(out_channels,
-                      kernel_size=1,
-                      padding='same',
-                      use_bias=False,
-                      name=prefix + 'project')(x)
+                kernel_initializer=RandomNormal(stddev=0.02),
+                kernel_size=1,
+                padding='same',
+                use_bias=False,
+                name=prefix + 'project')(x)
     x = BatchNormalization(axis=channel_axis,
                                   name=prefix + 'project/BatchNorm')(x)
 
@@ -92,8 +96,9 @@ def MobileNetV3(inputs, alpha=1.0, kernel=5, se_ratio=0.25):
         raise ValueError('Unsupported alpha - `{}` in MobilenetV3, Use 0.75, 1.0.'.format(alpha))
     # 416,416,3 -> 208,208,16
     x = Conv2D(16,kernel_size=3,strides=(2, 2),padding='same',
-                      use_bias=False,
-                      name='Conv')(inputs)
+                    kernel_initializer=RandomNormal(stddev=0.02),
+                    use_bias=False,
+                    name='Conv')(inputs)
     x = BatchNormalization(axis=-1,
                             epsilon=1e-3,
                             momentum=0.999,

@@ -9,11 +9,9 @@ from nets.yolo4 import yolo_body
 
 if __name__ == "__main__":
     inputs = Input([416,416,3])
-    model = yolo_body(inputs,3,80)
+    model = yolo_body(inputs,3,80,backbone="mobilenetv3")
     model.summary()
 
-    for i,layer in enumerate(model.layers):
-        print(i,layer.name) 
     # mobilenetv1 41,005,757
     # mobilenetv2 39,124,541
     # mobilenetv3 40,043,389

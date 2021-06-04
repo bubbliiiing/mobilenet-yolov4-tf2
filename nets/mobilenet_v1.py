@@ -1,14 +1,10 @@
 #-------------------------------------------------------------#
 #   MobileNet的网络部分
 #-------------------------------------------------------------#
-import numpy as np
-import tensorflow as tf
-import tensorflow.keras.backend as backend
 from tensorflow.keras import backend as K
-from tensorflow.keras.layers import (Activation, Add, BatchNormalization,
-                                     Concatenate, Conv2D, DepthwiseConv2D,
-                                     LeakyReLU, MaxPooling2D, UpSampling2D,
-                                     ZeroPadding2D)
+from tensorflow.keras.initializers import RandomNormal
+from tensorflow.keras.layers import (Activation, BatchNormalization, Conv2D,
+                                     DepthwiseConv2D)
 from tensorflow.keras.models import Model
 from tensorflow.keras.regularizers import l2
 
@@ -22,6 +18,7 @@ def _depthwise_conv_block(inputs, pointwise_conv_filters, alpha,
     x = DepthwiseConv2D((3, 3),
                         padding='same',
                         depth_multiplier=depth_multiplier,
+                        depthwise_initializer=RandomNormal(stddev=0.02),
                         strides=strides,
                         use_bias=False,
                         name='conv_dw_%d' % block_id)(inputs)
@@ -30,6 +27,7 @@ def _depthwise_conv_block(inputs, pointwise_conv_filters, alpha,
 
     # 1x1卷积
     x = Conv2D(pointwise_conv_filters, (1, 1),
+               kernel_initializer=RandomNormal(stddev=0.02),
                padding='same',
                use_bias=False,
                strides=(1, 1),
@@ -39,7 +37,7 @@ def _depthwise_conv_block(inputs, pointwise_conv_filters, alpha,
 
 def _conv_block(inputs, filters, alpha, kernel=(3, 3), strides=(1, 1)):
     filters = int(filters * alpha)
-    x = Conv2D(filters, kernel,
+    x = Conv2D(filters, kernel, kernel_initializer=RandomNormal(stddev=0.02),
                       padding='same',
                       use_bias=False,
                       strides=strides,
