@@ -21,10 +21,10 @@ from utils.utils import letterbox_image
 #--------------------------------------------#
 class YOLO(object):
     _defaults = {
-        "model_path"        : 'model_data/yolov4_ghostnet_voc.h5',
+        "model_path"        : 'model_data/yolov4_mobilenet_v1_voc.h5',
         "anchors_path"      : 'model_data/yolo_anchors.txt',
         "classes_path"      : 'model_data/voc_classes.txt',
-        "backbone"          : 'ghostnet',
+        "backbone"          : 'mobilenetv1',
         "alpha"             : 1,
         "score"             : 0.5,
         "iou"               : 0.3,
