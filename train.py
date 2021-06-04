@@ -1,4 +1,3 @@
-
 from functools import partial
 
 import numpy as np
@@ -408,7 +407,7 @@ if __name__ == "__main__":
     if True:
         Init_epoch          = 0
         Freeze_epoch        = 50
-        batch_size          = 2
+        batch_size          = 8
         learning_rate_base  = 1e-3
         
         epoch_size      = num_train // batch_size
@@ -471,7 +470,7 @@ if __name__ == "__main__":
     if True:
         Freeze_epoch        = 50
         Epoch               = 100
-        batch_size          = 2
+        batch_size          = 8
         learning_rate_base  = 1e-4
 
         epoch_size      = num_train // batch_size
