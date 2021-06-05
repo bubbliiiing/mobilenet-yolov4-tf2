@@ -1,4 +1,4 @@
-## YOLOV4：You Only Look Once目标检测模型-修改mobilenet系列主干网络-在Keras当中的实现
+## YOLOV4：You Only Look Once目标检测模型-修改mobilenet系列主干网络-在Tensorflow2当中的实现
 ---
 
 **2021年2月8日更新：**   
