@@ -43,7 +43,7 @@ tensorflow-gpu==2.2.0
 
 ## 文件下载
 训练所需的各个权值可在百度网盘中下载。    
-链接: https://pan.baidu.com/s/1f0Av_-CvOfMLEjcJLU3xog 提取码: nb5p   
+链接: https://pan.baidu.com/s/10UtCsu68cB2SCyvQ6fvtdw 提取码: t98u    
 四个已经训练好的权重均为VOC数据集的权重。  
   
 VOC数据集下载地址如下：  
