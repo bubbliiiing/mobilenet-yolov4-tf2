@@ -13,8 +13,8 @@
 3. [注意事项 Attention](#注意事项)
 4. [小技巧的设置 TricksSet](#小技巧的设置)
 5. [文件下载 Download](#文件下载)
-6. [预测步骤 How2predict](#预测步骤)
-7. [训练步骤 How2train](#训练步骤)
+6. [训练步骤 How2train](#训练步骤)
+7. [预测步骤 How2predict](#预测步骤)
 8. [评估步骤 How2eval](#评估步骤)
 9. [参考资料 Reference](#Reference)
 
