@@ -1,11 +1,14 @@
 ## YOLOV4：You Only Look Once目标检测模型-修改mobilenet系列主干网络-在Tensorflow2当中的实现
 ---
 
-**2021年2月8日更新：**   
-**加入letterbox_image的选项，关闭letterbox_image后网络的map一般可以得到提升。**    
+**2021年10月12日更新：**   
+**进行了大幅度的更新，对代码的模块进行修改，加了大量注释。**   
 
 **2021年6月4日更新：**    
 **加入ghostnet主干网络。**
+
+**2021年2月8日更新：**   
+**加入letterbox_image的选项，关闭letterbox_image后网络的map一般可以得到提升。**    
 
 ## 目录
 1. [性能情况 Performance](#性能情况)
@@ -42,7 +45,7 @@ tensorflow-gpu==2.2.0
 3、label_smoothing可用于控制是否Label Smoothing平滑。  
 
 ## 文件下载
-训练所需的各个权值可在百度网盘中下载。    
+训练所需的各个权值、主干的权值可在百度网盘中下载。    
 链接: https://pan.baidu.com/s/10UtCsu68cB2SCyvQ6fvtdw 提取码: t98u    
 四个已经训练好的权重均为VOC数据集的权重。  
   
