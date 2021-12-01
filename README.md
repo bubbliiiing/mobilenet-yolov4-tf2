@@ -29,6 +29,7 @@
 | VOC07+12 | [yolov4_mobilenet_v2_voc.h5](https://github.com/bubbliiiing/mobilenet-yolov4-lite-tf2/releases/download/v1.0/yolov4_mobilenet_v2_voc.h5) | VOC-Test07 | 416x416 | - | 79.72
 | VOC07+12 | [yolov4_mobilenet_v3_voc.h5](https://github.com/bubbliiiing/mobilenet-yolov4-lite-tf2/releases/download/v1.0/yolov4_mobilenet_v3_voc.h5) | VOC-Test07 | 416x416 | - | 78.45
 | VOC07+12 | [yolov4_ghostnet_voc.h5](https://github.com/bubbliiiing/mobilenet-yolov4-lite-tf2/releases/download/v1.0/yolov4_ghostnet_voc.h5) | VOC-Test07 | 416x416 | - | 78.64
+| VOC07+12 | [yolov4_densenet121_voc.h5](https://github.com/bubbliiiing/mobilenet-yolov4-lite-tf2/releases/download/v1.0/yolov4_densenet121_voc.h5) | VOC-Test07 | 416x416 | - | 82.90
 
 ## 所需环境
 tensorflow-gpu==2.2.0   
@@ -46,12 +47,12 @@ tensorflow-gpu==2.2.0
 
 ## 文件下载
 训练所需的各个权值、主干的权值可在百度网盘中下载。    
-链接: https://pan.baidu.com/s/10UtCsu68cB2SCyvQ6fvtdw 提取码: t98u    
-四个已经训练好的权重均为VOC数据集的权重。  
-  
+链接: https://pan.baidu.com/s/1-yrf_23leC3XBKZdjMUIRA   
+提取码: n1vu   
+   
 VOC数据集下载地址如下，里面已经包括了训练集、测试集、验证集（与测试集一样），无需再次划分：  
-链接: https://pan.baidu.com/s/1YuBbBKxm2FGgTU5OfaeC5A    
-提取码: uack   
+链接: https://pan.baidu.com/s/19Mw2u_df_nBzsC2lg20fQA    
+提取码: j5ge    
 
 ## 训练步骤
 ### a、训练VOC07+12数据集
