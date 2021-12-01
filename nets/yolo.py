@@ -2,13 +2,14 @@ from functools import wraps
 
 from tensorflow.keras import backend as K
 from tensorflow.keras.initializers import RandomNormal
-from tensorflow.keras.layers import (Add, BatchNormalization, Concatenate, Activation, DepthwiseConv2D,
-                                     Conv2D, Input, Lambda, Layer, LeakyReLU,
-                                     MaxPooling2D, UpSampling2D, ZeroPadding2D)
+from tensorflow.keras.layers import (Activation, BatchNormalization,
+                                     Concatenate, Conv2D, DepthwiseConv2D,
+                                     Input, Lambda, MaxPooling2D, UpSampling2D)
 from tensorflow.keras.models import Model
 from tensorflow.keras.regularizers import l2
 from utils.utils import compose
 
+from nets.densenet import DenseNet
 from nets.ghostnet import Ghostnet
 from nets.mobilenet_v1 import MobileNetV1
 from nets.mobilenet_v2 import MobileNetV2
@@ -107,8 +108,13 @@ def yolo_body(input_shape, anchors_mask, num_classes, backbone="mobilenetv1", al
         #   52,52,40；26,26,112；13,13,160
         #---------------------------------------------------#
         feat1,feat2,feat3 = Ghostnet(inputs)
+    elif backbone in ["densenet121", "densenet169", "densenet201"]:
+        #---------------------------------------------------#   
+        #   52,52,256；26,26,512；13,13,1024
+        #---------------------------------------------------#
+        feat1,feat2,feat3 = DenseNet(inputs, backbone)
     else:
-        raise ValueError('Unsupported backbone - `{}`, Use mobilenetv1, mobilenetv2, mobilenetv3, ghostnet.'.format(backbone))
+        raise ValueError('Unsupported backbone - `{}`, Use mobilenetv1, mobilenetv2, mobilenetv3, ghostnet, densenet121, densenet169, densenet201.'.format(backbone))
     
     P5 = DarknetConv2D_BN_Leaky(int(512* alpha), (1,1))(feat3)
     P5 = _depthwise_conv_block(P5, int(1024* alpha))

@@ -76,10 +76,13 @@ if __name__ == "__main__":
     input_shape     = [416, 416]
     #--------------------------------------------------#
     #   一定要注意backbone、alpha与权值文件的对应！
-    #   mobilenetv1可选的alpha有0.25, 0.5, 0.75, 1.0
-    #   mobilenetv2可选的alpha有0.5, 0.75, 1.0, 1.3
-    #   mobilenetv3可选的alpha有0.75, 1.0
-    #   ghostnet可选的alpha有1.0
+    #   mobilenetv1 可选的alpha有0.25, 0.5, 0.75, 1.0
+    #   mobilenetv2 可选的alpha有0.5, 0.75, 1.0, 1.3
+    #   mobilenetv3 可选的alpha有0.75, 1.0
+    #   ghostnet    可选的alpha有1.0
+    #   densenet121 可选的alpha有1.0
+    #   densenet169 可选的alpha有1.0
+    #   densenet201 可选的alpha有1.0
     #   权值文件的下载请看README
     #--------------------------------------------------#
     backbone        = "mobilenetv1"
@@ -189,8 +192,10 @@ if __name__ == "__main__":
         freeze_layers = 186
     elif backbone == "ghostnet":
         freeze_layers = 300
+    elif backbone in ["densenet121", "densenet169", "densenet201"]:
+        freeze_layers = {'densenet121' : 426, 'densenet169' : 594, 'densenet201' : 706}[backbone]
     else:
-        raise ValueError('Unsupported backbone - `{}`, Use mobilenetv1, mobilenetv2, mobilenetv3, ghostnet.'.format(backbone))
+        raise ValueError('Unsupported backbone - `{}`, Use mobilenetv1, mobilenetv2, mobilenetv3, ghostnet, densenet121, densenet169, densenet201.'.format(backbone))
 
     if Freeze_Train:
         for i in range(freeze_layers): model_body.layers[i].trainable = False
