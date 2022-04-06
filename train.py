@@ -197,6 +197,14 @@ if __name__ == "__main__":
     #------------------------------------------------------------------#
     lr_decay_type       = 'cos'
     #------------------------------------------------------------------#
+    #   focal_loss      是否使用Focal Loss平衡正负样本
+    #   focal_alpha     Focal Loss的正负样本平衡参数
+    #   focal_gamma     Focal Loss的难易分类样本平衡参数
+    #------------------------------------------------------------------#
+    focal_loss          = False
+    focal_alpha         = 0.25
+    focal_gamma         = 2
+    #------------------------------------------------------------------#
     #   save_period     多少个epoch保存一次权值，默认每个世代都保存
     #------------------------------------------------------------------#
     save_period         = 1
@@ -237,7 +245,7 @@ if __name__ == "__main__":
         model_body.load_weights(model_path, by_name=True, skip_mismatch=True)
 
     if not eager:
-        model = get_train_model(model_body, input_shape, num_classes, anchors, anchors_mask, label_smoothing)
+        model = get_train_model(model_body, input_shape, num_classes, anchors, anchors_mask, label_smoothing, focal_loss, focal_alpha, focal_gamma)
 
     #---------------------------#
     #   读取数据集对应的txt
@@ -370,7 +378,7 @@ if __name__ == "__main__":
                 K.set_value(optimizer.lr, lr)
 
                 fit_one_epoch(model_body, loss_history, optimizer, epoch, epoch_step, epoch_step_val, gen, gen_val, 
-                            end_epoch, input_shape, anchors, anchors_mask, num_classes, label_smoothing, save_period, save_dir)
+                            end_epoch, input_shape, anchors, anchors_mask, num_classes, label_smoothing, focal_loss, focal_alpha, focal_gamma, save_period, save_dir)
 
                 train_dataloader.on_epoch_end()
                 val_dataloader.on_epoch_end()
